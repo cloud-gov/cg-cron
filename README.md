@@ -29,23 +29,23 @@ This app expects a few environment variables and a user-provided service.
 
 Create a user-provided service to hold a credentials or other non-public variables.
 
-	```bash
-	cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
-	```
+```
+cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
+```
 
 ### Running the Example:
 
 Create the credential service.
 
-	```bash
-	cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
-	```
+```
+cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
+```
 
 Push the app.
 
-	```bash
-	cf push
-	```
+```
+cf push
+```
 The app will echo oncer per second until stopped.
 
 ```
