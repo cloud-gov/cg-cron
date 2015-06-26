@@ -1,0 +1,13 @@
+---
+applications:
+- name: cf-cron
+  no-route: true
+  disk_quota: 256M
+  memory: 128M
+  env:
+   CF_CREDS: cf-cron-creds
+   PREP_JOB: "/bin/bash, prep.sh"
+   CRON_JOB: "/bin/bash, job.sh, creds.username, creds.password"
+   CRON_SCHEDULE: "* * * * * *"
+  services:
+   - cf-cron-creds
