@@ -11,7 +11,7 @@ The `set-quota-auditor.sh` script expects to find all the parameters it needs in
 
 Create a credential service with following keys and appropriate values.
 
-```bash
+```
 cf cups cf-cron-creds -p '{"cf_api":"API_URL", "username":"ORGMANAGER", "password":"PASSWORD", "cf_org":"DEFAULT_ORG", "cf_space":"DEFAULT_SPACE", "auditor":"AUDITOR_USERNAME"}'
 ```
 
