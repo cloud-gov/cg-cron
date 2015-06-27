@@ -1,0 +1,13 @@
+---
+applications:
+- name: cf-quota-perm-set
+  no-route: true
+  disk_quota: 256M
+  memory: 128M
+  env:
+   CF_CREDS: cf-quota-perm-set-creds
+   PREP_JOB: "/bin/bash, prep.sh, creds.cf_api, creds.username, creds.password, creds.cf_org, creds.cf_space"
+   CRON_JOB: "/bin/bash, job.sh, creds.auditor"
+   CRON_SCHEDULE: "0 0 * * * *"
+  services:
+   - cf-quota-perm-set-creds
