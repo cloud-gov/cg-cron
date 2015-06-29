@@ -12,11 +12,12 @@ This app expects a few environment variables and a user-provided service.
   **Example:** `cf-cron-creds`
   
 * `PREP_JOB:`<br> 
-  **Description:** The recurring job. An array-formatted command with optional parameters. Specify a script here to avoid unexpected issues with variable expansion.<br>
+    **Description:** An optional job which runs once, prior to the recurring job. Takes an array-formatted command with optional parameters. Specify a script here to avoid unexpected issues with variable expansion.<br>
+
    **Example:** `"/bin/bash, prep.sh"`
    
 * `CRON_JOB:`<br>
-  **Description:** An optional job which runs once, prior to the recurring job. Takes an array-formatted command with optional parameters. Specify a script here to avoid unexpected issues with variable expansion.<br>
+  **Description:** The recurring job. An array-formatted command with optional parameters. Specify a script here to avoid unexpected issues with variable expansion.<br>
    **Example:** `"/bin/bash, job.sh, creds.username, creds.password"`
    
    Parameters passed to `PREP_JOB` and `CRON_JOB` with the `creds.` prefix will eval to variables held in the user-provided service specified by `CF_CREDS`.
