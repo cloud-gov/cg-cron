@@ -2,7 +2,7 @@
 applications:
 - name: cf-quota-perm-set
   no-route: true
-  disk_quota: 256M
+  disk_quota: 128M
   memory: 128M
   env:
    CF_CREDS: cf-quota-perm-set-creds
