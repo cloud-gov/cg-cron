@@ -1,3 +1,5 @@
+"use strict";
+
 // Give a little help when failing.
 function friendlyExit(reason) {
   if (reason === 'env_job') {
@@ -9,6 +11,8 @@ function friendlyExit(reason) {
 // Does the parameter look like the name of a service credential.
 function credEval(cred) {
   if (cred.split(".")[0] === 'creds') {
+    // Is there a better way do this? Evaluating single strings
+    // doesn't seem terrible.
     return eval(cred);
   }
   return cred;
@@ -56,12 +60,14 @@ console.log("Started...");
 // Run our prep commands.
 var spawn = require('child_process').spawn;
 
+// Carve up the prep job into command and params.
 if (prep.length > 1) {
   var prep_run = spawn(prep[0], prep.slice(1));
 } else {
   var prep_run = spawn(prep[0]);
 }
 
+// Handle and label job output.
 prep_run.stdout.on('data', function (data) {
   console.log('Prep_Out: ' + data);
 });
@@ -80,12 +86,14 @@ prep_run.on('close', function (code) {
 
   new CronJob(schedule, function () {
 
-    var job_run = spawn(job[0], job.slice(1));
-
+    // Carve up the prep job into command and params.
     if (job.length > 1) {
-      job_run = spawn(job[0]);
+      var job_run = spawn(job[0], job.slice(1));
+    } else {
+      var job_run = spawn(job[0]);
     }
 
+    // Handle and label job output.
     job_run.stdout.on('data', function (data) {
       console.log('Job_Out: ' + data);
     });
