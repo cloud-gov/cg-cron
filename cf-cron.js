@@ -1,6 +1,8 @@
+"use strict";
+
 // Give a little help when failing.
-function friendlyExit(reason){
-  if (reason == 'env_job'){
+function friendlyExit(reason) {
+  if (reason === 'env_job') {
     console.log('You must set the environment variable CRON_JOB.');
     process.exit();
   }
@@ -8,15 +10,17 @@ function friendlyExit(reason){
 
 // Does the parameter look like the name of a service credential.
 function credEval(cred) {
-  if (cred.split(".")[0] == 'creds'){
+  if (cred.split(".")[0] === 'creds') {
+    // Is there a better way do this? Evaluating single strings
+    // doesn't seem terrible.
     return eval(cred);
-  } else {
-    return cred;
   }
+  return cred;
 }
 
 // Clean up parameters and check if they're service credentials.
 function evalJob(job) {
+  var comma = ',';
   job = job.split(comma);
   job = job.map(Function.prototype.call, String.prototype.trim);
   job = job.map(credEval);
@@ -32,7 +36,6 @@ var appEnv = cfenv.getAppEnv();
 var creds = appEnv.getServiceCreds(cf_creds);
 
 // Get the command.
-var comma = ',';
 var env_job = process.env.CRON_JOB || friendlyExit('env_job');
 
 // Clean up extra whitespace here to give some leeway in job formatting.
@@ -57,12 +60,14 @@ console.log("Started...");
 // Run our prep commands.
 var spawn = require('child_process').spawn;
 
+// Carve up the prep job into command and params.
 if (prep.length > 1) {
   var prep_run = spawn(prep[0], prep.slice(1));
 } else {
   var prep_run = spawn(prep[0]);
 }
 
+// Handle and label job output.
 prep_run.stdout.on('data', function (data) {
   console.log('Prep_Out: ' + data);
 });
@@ -76,28 +81,29 @@ prep_run.on('close', function (code) {
 
   // Set up cron and run the job.
   console.log('Scheduling...');
+
   var CronJob = require('cron').CronJob;
 
-  new CronJob(schedule, function() {
+  new CronJob(schedule, function () {
+    // Carve up the prep job into command and params.
+    var job_run;
+    if (job.length > 1) {
+      job_run = spawn(job[0], job.slice(1));
+    } else {
+      job_run = spawn(job[0]);
+    }
 
-      var job_run;
-      if (job.length > 1) {
-        job_run = spawn(job[0], job.slice(1));
-      } else {
-        job_run = spawn(job[0]);
-      }
+    // Handle and label job output.
+    job_run.stdout.on('data', function (data) {
+      console.log('Job_Out: ' + data);
+    });
 
-      job_run.stdout.on('data', function (data) {
-        console.log('Job_Out: ' + data);
-      });
+    job_run.stderr.on('data', function (data) {
+      console.log('Job_Err: ' + data);
+    });
 
-      job_run.stderr.on('data', function (data) {
-        console.log('Job_Err: ' + data);
-      });
-
-      job_run.on('close', function (code) {
-        console.log('Job_Exit:' + code);
-      });
+    job_run.on('close', function (code) {
+      console.log('Job_Exit:' + code);
+    });
   }, null, true, 'America/New_York');
-
 });
