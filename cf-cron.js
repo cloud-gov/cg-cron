@@ -85,12 +85,12 @@ prep_run.on('close', function (code) {
   var CronJob = require('cron').CronJob;
 
   new CronJob(schedule, function () {
-
     // Carve up the prep job into command and params.
+    var job_run;
     if (job.length > 1) {
-      var job_run = spawn(job[0], job.slice(1));
+      job_run = spawn(job[0], job.slice(1));
     } else {
-      var job_run = spawn(job[0]);
+      job_run = spawn(job[0]);
     }
 
     // Handle and label job output.
@@ -106,5 +106,4 @@ prep_run.on('close', function (code) {
       console.log('Job_Exit:' + code);
     });
   }, null, true, 'America/New_York');
-
 });
