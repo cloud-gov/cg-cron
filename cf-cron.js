@@ -3,28 +3,28 @@ function friendlyExit(reason){
   if (reason == 'env_job'){
     console.log('You must set the environment variable CRON_JOB.');
     process.exit();
-  };
-};
+  }
+}
 
 // Does the parameter look like the name of a service credential.
 function credEval(cred) {
   if (cred.split(".")[0] == 'creds'){
     return eval(cred);
   } else {
-    return cred
-  };
-};
+    return cred;
+  }
+}
 
 // Clean up parameters and check if they're service credentials.
 function evalJob(job) {
-  job = job.split(comma),
-  job = job.map(Function.prototype.call, String.prototype.trim),
+  job = job.split(comma);
+  job = job.map(Function.prototype.call, String.prototype.trim);
   job = job.map(credEval);
-  return job
-};
+  return job;
+}
 
 // Get the name of our user-provided credential service.
-var cf_creds = process.env.CF_CREDS
+var cf_creds = process.env.CF_CREDS;
 
 // Use cfenv to grab our credentials from the credential service.
 var cfenv = require("cfenv");
@@ -42,26 +42,26 @@ var prep_job = process.env.PREP_JOB || false;
 if (prep_job) {
   var prep = evalJob(prep_job);
 } else {
-  var prep = ":"
-};
+  var prep = ":";
+}
 
 // Parse the cron job.
 var job = evalJob(env_job);
 
 // Get the command schedule.
-var schedule = process.env.CRON_SCHEDULE
+var schedule = process.env.CRON_SCHEDULE;
 
 // Lets begin.
 console.log("Started...");
 
 // Run our prep commands.
-var spawn = require('child_process').spawn
+var spawn = require('child_process').spawn;
 
 if (prep.length > 1) {
   var prep_run = spawn(prep[0], prep.slice(1));
 } else {
   var prep_run = spawn(prep[0]);
-};
+}
 
 prep_run.stdout.on('data', function (data) {
   console.log('Prep_Out: ' + data);
@@ -80,11 +80,12 @@ prep_run.on('close', function (code) {
 
   new CronJob(schedule, function() {
 
+      var job_run;
       if (job.length > 1) {
-        var job_run = spawn(job[0], job.slice(1));
+        job_run = spawn(job[0], job.slice(1));
       } else {
-        var job_run = spawn(job[0]);
-      };
+        job_run = spawn(job[0]);
+      }
 
       job_run.stdout.on('data', function (data) {
         console.log('Job_Out: ' + data);
