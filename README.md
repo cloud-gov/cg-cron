@@ -24,6 +24,7 @@ This expects a crontab.json with the format:
 
 **Output:**
 
+```
 Creating job:mod 15 for 10
 Creating job:mod 20 for 5
 Job: mod 20 for 5 - Out: Count 5 / 1
@@ -32,6 +33,7 @@ Job: mod 20 for 5 - Out: Count 5 / 3
 Job: mod 20 for 5 - Out: Count 5 / 4
 Job: mod 20 for 5 - Out: Count 5 / 5
 Job: mod 15 for 10 - Out: Count 10 / 1
+```
 
 ### Usage:
 
