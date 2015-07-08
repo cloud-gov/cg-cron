@@ -84,9 +84,21 @@ prep_run.on('close', function (code) {
 
   var CronJob = require('cron').CronJob;
 
-  new CronJob(schedule, function () {
+  var fs = require('fs');
+  var crontab = JSON.parse(fs.readFileSync('crontab.json', 'utf8'));
+  crontab.jobs.forEach(function(item, index) {
+
+    // Say something about which job we're on.
+    console.log('Creating job:' + item.name);
+
+    // Create a new cronjob.
+    new CronJob(item.schedule, function () {
+    
     // Carve up the prep job into command and params.
+    job = evalJob(item.command);
+
     var job_run;
+
     if (job.length > 1) {
       job_run = spawn(job[0], job.slice(1));
     } else {
@@ -95,15 +107,16 @@ prep_run.on('close', function (code) {
 
     // Handle and label job output.
     job_run.stdout.on('data', function (data) {
-      console.log('Job_Out: ' + data);
+      console.log('Job: ' + item.name + ' - Out: ' + data);
     });
 
     job_run.stderr.on('data', function (data) {
-      console.log('Job_Err: ' + data);
+      console.log('Job: ' + item.name + ' - Err: ' + data);
     });
 
     job_run.on('close', function (code) {
-      console.log('Job_Exit:' + code);
+      console.log('Job: ' + item.name + ' - Exit:' + code);
     });
   }, null, true, 'America/New_York');
+  });
 });

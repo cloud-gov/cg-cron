@@ -1,0 +1,15 @@
+{
+  "jobs": [
+    {
+      "name": "mod 15 for 10",
+      "schedule": "*/15 * * * * *", 
+      "command": "/bin/bash, count10.sh"
+    },
+    {
+      "name": "mod 20 for 5",
+      "schedule": "*/20 * * * * *", 
+      "command": "/bin/bash, count5.sh"
+    }
+  ]
+}
+

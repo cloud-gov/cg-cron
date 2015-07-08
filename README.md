@@ -1,6 +1,38 @@
 # cf-cron
 Run cron jobs in a Cloud Foundry app.
 
+### Multi-Job:
+
+This expects a crontab.json with the format:
+
+```
+{
+  "jobs": [
+    {
+      "name": "mod 15 for 10",
+      "schedule": "*/15 * * * * *", 
+      "command": "/bin/bash, count10.sh"
+    },
+    {
+      "name": "mod 20 for 5",
+      "schedule": "*/20 * * * * *", 
+      "command": "/bin/bash, count5.sh"
+    }
+  ]
+}
+```
+
+**Output:**
+
+Creating job:mod 15 for 10
+Creating job:mod 20 for 5
+Job: mod 20 for 5 - Out: Count 5 / 1
+Job: mod 20 for 5 - Out: Count 5 / 2
+Job: mod 20 for 5 - Out: Count 5 / 3
+Job: mod 20 for 5 - Out: Count 5 / 4
+Job: mod 20 for 5 - Out: Count 5 / 5
+Job: mod 15 for 10 - Out: Count 10 / 1
+
 ### Usage:
 
 This app expects a few environment variables and a bound service.
