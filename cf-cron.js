@@ -2,22 +2,22 @@
 
 var CronJob   = require('cron').CronJob,
 
-    // Get the name of our user-provided credential service.
-    cf_creds  = process.env.CF_CREDS,
+  // Get the name of our user-provided credential service.
+  cf_creds  = process.env.CF_CREDS,
 
-    // Use cfenv to grab our credentials from the credential service.
-    cfenv     = require("cfenv"),
-    appEnv    = cfenv.getAppEnv(),
-    creds     = appEnv.getServiceCreds(cf_creds),
+  // Use cfenv to grab our credentials from the credential service.
+  cfenv     = require("cfenv"),
+  appEnv    = cfenv.getAppEnv(),
+  creds     = appEnv.getServiceCreds(cf_creds),
 
-    // For reading crontab.json
-    fs        = require('fs'),
+  // For reading crontab.json
+  fs        = require('fs'),
 
-    // For running all of our jobs.
-    spawn     = require('child_process').spawn,
+  // For running all of our jobs.
+  spawn     = require('child_process').spawn,
 
-    // YAML to parse the crontab.
-    YAML      = require('yamljs');
+  // YAML to parse the crontab.
+  YAML      = require('yamljs');
 
 // Does the parameter look like the name of a service credential.
 function credEval(cred) {
@@ -46,31 +46,29 @@ function makeJob(entry) {
 
   // Create a new cronjob.
   new CronJob(entry.schedule, function () {
-  
   // Carve up the prep job into command and params.
-  var job = evalJob(entry.command);
+    var job = evalJob(entry.command),
+      job_run;
 
-  var job_run;
+    if (job.length > 1) {
+      job_run = spawn(job[0], job.slice(1));
+    } else {
+      job_run = spawn(job[0]);
+    }
 
-  if (job.length > 1) {
-    job_run = spawn(job[0], job.slice(1));
-  } else {
-    job_run = spawn(job[0]);
-  }
+    // Handle and label job output.
+    job_run.stdout.on('data', function (data) {
+      console.log('Job: ' + entry.name + ' - Out: ' + data);
+    });
 
-  // Handle and label job output.
-  job_run.stdout.on('data', function (data) {
-    console.log('Job: ' + entry.name + ' - Out: ' + data);
-  });
+    job_run.stderr.on('data', function (data) {
+      console.log('Job: ' + entry.name + ' - Err: ' + data);
+    });
 
-  job_run.stderr.on('data', function (data) {
-    console.log('Job: ' + entry.name + ' - Err: ' + data);
-  });
-
-  job_run.on('close', function (code) {
-    console.log('Job: ' + entry.name + ' - Exit: ' + code);
-  });
-}, null, true, 'America/New_York');
+    job_run.on('close', function (code) {
+      console.log('Job: ' + entry.name + ' - Exit: ' + code);
+    });
+  }, null, true, 'America/New_York');
 }
 
 // Make a new prep job.
@@ -79,15 +77,15 @@ function makePrep(entry) {
   console.log('Preparing for: ' + entry.name + ' with ' + entry.prep.name);
 
   // Run our prep commands.
-  var spawn = require('child_process').spawn;
-
-  var prep = evalJob(entry.prep.command);
+  var spawn = require('child_process').spawn,
+    prep = evalJob(entry.prep.command),
+    prep_run;
 
   // Carve up the prep job into command and params.
   if (prep.length > 1) {
-    var prep_run = spawn(prep[0], prep.slice(1));
+    prep_run = spawn(prep[0], prep.slice(1));
   } else {
-    var prep_run = spawn(prep[0]);
+    prep_run = spawn(prep[0]);
   }
 
   // Handle and label job output.
@@ -108,7 +106,7 @@ function makePrep(entry) {
       // Now run the job.
       makeJob(entry);
     } else {
-      console.log('Prep job failed. Stopping.')
+      console.log('Prep job failed. Stopping.');
       process.exit();
     }
   });
@@ -119,14 +117,14 @@ var crontab;
 
 try {
   crontab = YAML.parse(fs.readFileSync('crontab.yml', 'utf8'));
-  console.log('Found crontab.yml.')
+  console.log('Found crontab.yml.');
 } catch (e) {
   try {
     crontab = JSON.parse(fs.readFileSync('crontab.json', 'utf8'));
-    console.log('Found crontab.json.')
+    console.log('Found crontab.json.');
   } catch (e) {
     console.log('No crontabs found.');
-    console.log('Please add crontab.yml or crontab.json.')
+    console.log('Please add crontab.yml or crontab.json.');
     console.log('The error was: ' + e);
     process.exit();
   }
@@ -136,14 +134,14 @@ try {
 console.log("cf-cron started...");
 
 // Summarize the crontab.
-console.log('Found ' + crontab.jobs.length + ' jobs.')
-crontab.jobs.forEach(function(item, index) {
-  console.log(index + ':' + item.name)
+console.log('Found ' + crontab.jobs.length + ' jobs.');
+crontab.jobs.forEach(function (item, index) {
+  console.log(index + ':' + item.name);
 });
 
 // Run jobs.
-crontab.jobs.forEach(function(item, index) {
-  if ('prep' in item){
+crontab.jobs.forEach(function (item, index) {
+  if (item.hasOwnProperty('prep')) {
     makePrep(item);
   } else {
     makeJob(item);
