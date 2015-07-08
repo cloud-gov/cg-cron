@@ -44,6 +44,11 @@ function makeJob(entry) {
   // Say something about which job we're on.
   console.log('Creating Job: ' + entry.name);
 
+  // Set the timezone null if not provided.
+  if (!entry.hasOwnProperty('tz')) {
+      entry.tz = null;
+    }
+
   // Create a new cronjob.
   new CronJob(entry.schedule, function () {
   // Carve up the prep job into command and params.
@@ -68,7 +73,10 @@ function makeJob(entry) {
     job_run.on('close', function (code) {
       console.log('Job: ' + entry.name + ' - Exit: ' + code);
     });
-  }, null, true, 'America/New_York');
+  }, 
+  null, 
+  true,
+  entry.tz);
 }
 
 // Make a new prep job.
