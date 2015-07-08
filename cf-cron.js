@@ -42,7 +42,7 @@ function evalJob(job) {
 function makeJob(entry) {
 
   // Say something about which job we're on.
-  console.log('Creating job: ' + entry.name);
+  console.log('Creating Job: ' + entry.name);
 
   // Create a new cronjob.
   new CronJob(entry.schedule, function () {
