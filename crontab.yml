@@ -1,12 +1,11 @@
 ---
 jobs:
   - name: job-1
-    schedule: "*/15 * * * * *"
-    command: "/bin/bash, count10.sh"
+    schedule: "*/3 * * * * *"
+    command: "/bin/echo, sirius"
     prep:
       name: job-1-prep
-      schedule: "*/15 * * * * *"
-      command: "/bin/bash, count10.sh"
+      command: "/bin/bash, count3.sh"
   - name: job-2
-    schedule: "*/15 * * * * *"
-    command: "/bin/bash, count10.sh"
+    schedule: "*/5 * * * * *"
+    command: "/bin/echo, betelgeuse"
