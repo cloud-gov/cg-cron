@@ -43,24 +43,6 @@ jobs:
   **Description:** Time Zone for the cronjob.<br>
    **Example:** `"America/Los_Angeles"`
    
-
-**Output:**
-
-```
-Found crontab.yml.
-cf-cron started...
-Found 2 jobs.
-0:job-1
-1:job-2
-Preparing for: job-1 with job-1-prep
-Prep: job-1-prep - Out: Authenticating...
-Prep: job-1-prep - Out: OK
-Prep: job-1-prep - Exit: 0
-Finished: job-1-prep
-Creating Job: job-1
-Job: job-1 - Out: Running...
-```
-  
 ##### Credential Service:
 
 This app will take advantage of secrets held in the credentials of either a bound service or a user-provided service. To store arbitrary credentials or non-public variables, use the syntax below to set up a user-provided service.
