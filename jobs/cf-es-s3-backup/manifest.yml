@@ -1,0 +1,11 @@
+---
+applications:
+- name: s3-backup
+  no-route: true
+  disk_quota: 128M
+  memory: 128M
+  env:
+   CF_CREDS: bservice-backup
+  services:
+   - bservice-backup
+   - eservice
