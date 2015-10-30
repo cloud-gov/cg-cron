@@ -139,7 +139,7 @@ try {
 }
 
 // Lets begin.
-console.log("cf-cron started...");
+console.log("cg-cron started...");
 
 // Summarize the crontab.
 console.log('Found ' + crontab.jobs.length + ' jobs.');
