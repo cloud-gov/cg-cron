@@ -1,10 +1,10 @@
 {
-  "name": "cf-cron",
+  "name": "cg-cron",
   "version": "0.0.1",
   "description": "Run cron jobs in a Cloud Foundry app.",
-  "main": "cf-cron.js",
+  "main": "cg-cron.js",
   "scripts": {
-    "start": "node cf-cron.js",
+    "start": "node cg-cron.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

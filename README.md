@@ -1,4 +1,4 @@
-# cf-cron
+# cg-cron
 Run cron jobs in a Cloud Foundry app.
 
 ### Usage:
@@ -48,7 +48,7 @@ jobs:
 This app will take advantage of secrets held in the credentials of either a bound service or a user-provided service. To store arbitrary credentials or non-public variables, use the syntax below to set up a user-provided service.
 
 ```
-cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
+cf cups cg-cron-creds -p '{"username":"user", "password":"password"}'
 ```
 
 ### Running the Example:
@@ -56,7 +56,7 @@ cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
 Create the credential service.
 
 ```
-cf cups cf-cron-creds -p '{"username":"user", "password":"password"}'
+cf cups cg-cron-creds -p '{"username":"user", "password":"password"}'
 ```
 
 Push the app.
@@ -75,7 +75,7 @@ The app will:
 
 ```
 Found crontab.yml.
-cf-cron started...
+cg-cron started...
 Found 2 jobs.
 0:job-1
 1:job-2

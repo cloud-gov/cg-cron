@@ -1,10 +1,10 @@
 ---
 applications:
-- name: cf-cron
+- name: cg-cron
   no-route: true
   disk_quota: 256M
   memory: 128M
   env:
-   CF_CREDS: cf-cron-creds
+   CF_CREDS: cg-cron-creds
   services:
-   - cf-cron-creds
+   - cg-cron-creds

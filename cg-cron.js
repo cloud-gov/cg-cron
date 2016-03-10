@@ -73,8 +73,8 @@ function makeJob(entry) {
     job_run.on('close', function (code) {
       console.log('Job: ' + entry.name + ' - Exit: ' + code);
     });
-  }, 
-  null, 
+  },
+  null,
   true,
   entry.tz);
 }
@@ -120,7 +120,7 @@ function makePrep(entry) {
   });
 }
 
-// Look for a crontab. Try yaml then json.  
+// Look for a crontab. Try yaml then json.
 var crontab;
 
 try {
@@ -139,7 +139,7 @@ try {
 }
 
 // Lets begin.
-console.log("cf-cron started...");
+console.log("cg-cron started...");
 
 // Summarize the crontab.
 console.log('Found ' + crontab.jobs.length + ' jobs.');
